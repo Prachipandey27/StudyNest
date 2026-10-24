@@ -1,0 +1,154 @@
+{% extends 'base.html' %}{% block title %}Dashboard | StudyNest{% endblock %} {%
+block content %}
+<section class="welcome">
+  <div>
+    <span class="eyebrow">YOUR PERSONAL STUDY SPACE</span>
+    <h1>Hello, {{ session.get('user_name') }} 👋</h1>
+    <p>Keep your momentum going, one study session at a time.</p>
+  </div>
+  <span class="welcome-decoration">✦</span>
+</section>
+<section class="stats">
+  <article>
+    <span>Study time logged</span
+    ><strong>{{ total // 60 }}h {{ total % 60 }}m</strong
+    ><small>Across all sessions</small>
+  </article>
+  <article>
+    <span>Sessions completed</span><strong>{{ count }}</strong
+    ><small>Your learning log</small>
+  </article>
+  <article>
+    <span>Weekly timetable slots</span><strong>{{ weekly|length }}</strong
+    ><small>Planned routine</small>
+  </article>
+</section>
+<div class="dashboard-grid">
+  <section class="panel" id="sessions">
+    <div class="panel-heading">
+      <div>
+        <span class="eyebrow">KEEP A RECORD</span>
+        <h2>Study sessions</h2>
+      </div>
+    </div>
+    <form class="form-grid" method="post" action="{{ url_for('add_session') }}">
+      <input type="hidden" name="csrf" value="{{ csrf }}" /><label class="full"
+        >Subject<input
+          name="subject"
+          maxlength="60"
+          required
+          placeholder="e.g. Data Structures" /></label
+      ><label
+        >Date<input
+          name="study_date"
+          type="date"
+          value="{{ today }}"
+          required /></label
+      ><label
+        >Minutes studied<input
+          name="minutes"
+          type="number"
+          min="1"
+          max="1440"
+          required
+          placeholder="60" /></label
+      ><label class="full"
+        >Note (optional)<input
+          name="note"
+          maxlength="150"
+          placeholder="What did you work on?" /></label
+      ><button class="btn full" type="submit">+ Add session</button>
+    </form>
+    <h3 class="subheading">Recent sessions</h3>
+    {% if studies %}
+    <div class="entries">
+      {% for s in studies %}
+      <div class="entry">
+        <div class="entry-icon">✎</div>
+        <div class="entry-content">
+          <strong>{{ s['subject'] }}</strong
+          ><small
+            >{{ s['study_date'] }} · {{ s['minutes'] }} min{% if s['note'] %} ·
+            {{ s['note'] }}{% endif %}</small
+          >
+        </div>
+        <form
+          method="post"
+          action="{{ url_for('delete_session', item_id=s['id']) }}"
+        >
+          <input type="hidden" name="csrf" value="{{ csrf }}" /><button
+            class="delete"
+            type="submit"
+            title="Delete session"
+            aria-label="Delete study session"
+          >
+            ×
+          </button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty">No study sessions yet. Add your first one above.</p>
+    {% endif %}
+  </section>
+  <section class="panel" id="timetable">
+    <div class="panel-heading">
+      <div>
+        <span class="eyebrow">STAY CONSISTENT</span>
+        <h2>Weekly timetable</h2>
+      </div>
+    </div>
+    <form
+      class="form-grid"
+      method="post"
+      action="{{ url_for('add_timetable') }}"
+    >
+      <input type="hidden" name="csrf" value="{{ csrf }}" /><label class="full"
+        >Subject<input
+          name="subject"
+          maxlength="60"
+          required
+          placeholder="e.g. Mathematics" /></label
+      ><label class="full"
+        >Day<select name="day" required>
+          {% for day in days %}
+          <option value="{{ loop.index0 }}">{{ day }}</option>
+          {% endfor %}
+        </select></label
+      ><label>Start time<input name="start_time" type="time" required /></label
+      ><label>End time<input name="end_time" type="time" required /></label
+      ><button class="btn full" type="submit">+ Add timetable slot</button>
+    </form>
+    <h3 class="subheading">Your weekly plan</h3>
+    {% if weekly %}
+    <div class="entries">
+      {% for slot in weekly %}
+      <div class="entry">
+        <div class="day-pill">{{ days[slot['day']][:3] }}</div>
+        <div class="entry-content">
+          <strong>{{ slot['subject'] }}</strong
+          ><small>{{ slot['start_time'] }} to {{ slot['end_time'] }}</small>
+        </div>
+        <form
+          method="post"
+          action="{{ url_for('delete_timetable', item_id=slot['id']) }}"
+        >
+          <input type="hidden" name="csrf" value="{{ csrf }}" /><button
+            class="delete"
+            type="submit"
+            title="Delete slot"
+            aria-label="Delete timetable slot"
+          >
+            ×
+          </button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty">Your timetable is empty. Plan your first study slot.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}{% block title %}StudyNest | Your simple study
+companion{% endblock %} {% block content %}
+<section class="hero">
+  <div>
+    <span class="eyebrow">YOUR STUDY SPACE</span>
+    <h1>Good study habits,<br /><em>made simple.</em></h1>
+    <p>
+      Track what you studied, plan your weekly timetable and see your progress
+      in one calm place.
+    </p>
+    <div class="actions">
+      <a class="btn" href="{{ url_for('register') }}">Create a free account →</a
+      ><a class="btn ghost" href="{{ url_for('login') }}"
+        >I already have an account</a
+      >
+    </div>
+  </div>
+  <div class="hero-art">
+    <span class="top-tag">TODAY'S FOCUS</span>
+    <div class="art-icon">✍</div>
+    <strong>Show up for yourself.</strong>
+    <p>Small sessions add up to big things.</p>
+    <div class="fake-progress"><span></span></div>
+    <small>One step at a time</small>
+  </div>
+</section>
+<section class="features">
+  <article>
+    <span>01</span>
+    <h3>Log study sessions</h3>
+    <p>Save the subject, date and minutes you studied.</p>
+  </article>
+  <article>
+    <span>02</span>
+    <h3>Plan your week</h3>
+    <p>Build an easy timetable with recurring weekday slots.</p>
+  </article>
+  <article>
+    <span>03</span>
+    <h3>See your progress</h3>
+    <p>Check total study time and recent sessions.</p>
+  </article>
+</section>
+{% endblock %}

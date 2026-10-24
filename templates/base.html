@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}StudyNest{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar"><div class="container nav">
+    <a class="logo" href="{{ url_for('home') }}"><span class="logo-mark">✦</span> StudyNest</a>
+    <nav>{% if session.get('user_id') %}<a href="{{ url_for('dashboard') }}">Dashboard</a>
+      <form class="inline" method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="nav-link" type="submit">Logout</button></form>
+    {% else %}<a href="{{ url_for('login') }}">Login</a><a class="btn small" href="{{ url_for('register') }}">Get started</a>{% endif %}</nav>
+  </div></header>
+  <main class="container">
+    {% for category,message in get_flashed_messages(with_categories=true) %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="container footer">StudyNest · A little progress, every day.</footer>
+</body>
+</html>
